@@ -4,24 +4,42 @@
 
 package org.mozilla.prototypevideoplaylists
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_playlist.*
 
 class PlaylistActivity : AppCompatActivity() {
+
+    private lateinit var firebaseAuth: FirebaseAuth
+
+    private val adapter = PlaylistAdapter(getFirebaseUserID(this))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlist)
         initToolbar()
         initPlaylistView()
+        firebaseAuth = FirebaseAuth.getInstance()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        firebaseAuth.signInAnonymously() // todo: we should verify completion or figure out if it blocks.
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        adapter.onPause()
     }
 
     private fun initToolbar() {
@@ -31,8 +49,24 @@ class PlaylistActivity : AppCompatActivity() {
     }
 
     private fun initPlaylistView() {
-        playlistView.adapter = PlaylistAdapter(this)
+        playlistView.adapter = adapter
         playlistView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (data == null) { super.onActivityResult(requestCode, resultCode, data); return }
+        when (data.action) {
+            AddPlaylistActivity.ACTION_ACTIVITY_RESULT -> onAddPlaylistActivityResult(data)
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun onAddPlaylistActivityResult(data: Intent) {
+        //val playlistTitle = data.getStringExtra(AddPlaylistActivity.EXTRA_PLAYLIST_TITLE) ?: ""
+        val playlist = Playlist("A playlist", emptyList()) // todo: get real title.
+
+        val newPlaylistRef = getFirebaseRefForUserID(getFirebaseUserID(this)).push()
+        newPlaylistRef.setValue(playlist)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,26 +85,6 @@ class PlaylistActivity : AppCompatActivity() {
 
     private fun onAddPlaylistClicked() {
         val addPlaylistIntent = Intent(this, AddPlaylistActivity::class.java)
-        startActivity(addPlaylistIntent)
+        startActivityForResult(addPlaylistIntent, 100)
     }
-}
-
-private class PlaylistAdapter(val context: Context) : RecyclerView.Adapter<PlaylistViewHolder>() {
-    override fun onBindViewHolder(holder: PlaylistViewHolder?, position: Int) {
-        if (holder == null) return
-        holder.titleView.text = "Test title"
-    }
-
-    override fun getItemCount(): Int {
-        return 1
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PlaylistViewHolder {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.playlist_item, parent, false)
-        return PlaylistViewHolder(view)
-    }
-}
-
-private class PlaylistViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
-    val titleView = rootView.findViewById(R.id.playlistTitleView) as TextView
 }

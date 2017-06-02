@@ -5,6 +5,7 @@
 package org.mozilla.prototypevideoplaylists
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -40,7 +41,17 @@ class PlaylistActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return super.onOptionsItemSelected(item)
+        if (item == null) return false
+        when (item.itemId) {
+            R.id.add_playlist -> onAddPlaylistClicked()
+            else -> super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    private fun onAddPlaylistClicked() {
+        val addPlaylistIntent = Intent(this, AddPlaylistActivity::class.java)
+        startActivity(addPlaylistIntent)
     }
 }
 

@@ -9,7 +9,7 @@
 >
 
     <item
-            android:id="@+id/action_favorite"
+            android:id="@+id/add_playlist"
             android:icon="@drawable/add"
             android:title="@string/add_playlist"
             app:showAsAction="always"

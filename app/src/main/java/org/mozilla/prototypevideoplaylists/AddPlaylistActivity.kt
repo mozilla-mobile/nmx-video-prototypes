@@ -36,7 +36,7 @@ class AddPlaylistActivity : AppCompatActivity() {
 
     private fun getResultIntent(): Intent {
         val resultIntent = Intent(ACTION_ACTIVITY_RESULT)
-        resultIntent.putExtra(EXTRA_PLAYLIST_TITLE, titleEditText.text)
+        resultIntent.putExtra(EXTRA_PLAYLIST_TITLE, titleEditText.text.toString())
         return resultIntent
     }
 }

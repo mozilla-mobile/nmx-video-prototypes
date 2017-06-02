@@ -20,7 +20,8 @@
                 android:id="@+id/titleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Testing"
+                android:hint="@string/playlist_title_hint"
+                android:inputType="text"
         />
     </android.support.design.widget.TextInputLayout>
 

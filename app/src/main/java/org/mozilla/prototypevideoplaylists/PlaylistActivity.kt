@@ -64,8 +64,8 @@ class PlaylistActivity : AppCompatActivity() {
     }
 
     private fun onAddPlaylistActivityResult(data: Intent) {
-        //val playlistTitle = data.getStringExtra(AddPlaylistActivity.EXTRA_PLAYLIST_TITLE) ?: ""
-        val playlist = Playlist("A playlist", emptyList()) // todo: get real title.
+        val playlistTitle = data.getStringExtra(AddPlaylistActivity.EXTRA_PLAYLIST_TITLE) ?: ""
+        val playlist = Playlist(playlistTitle, emptyList())
 
         val newPlaylistRef = getFirebaseRefForUserID(getFirebaseUserID(this)).push()
         newPlaylistRef.setValue(playlist)

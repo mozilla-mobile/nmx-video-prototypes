@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">PrototypeVideoPlaylists</string>
 
+    <!-- PlaylistActivity -->
     <string name="playlist_activity_title">Saved video playlists</string>
     <string name="add_playlist">Add playlist</string>
+
+    <!-- AddPlaylistActivity -->
+    <string name="playlist_title_hint">Playlist name</string>
 </resources>

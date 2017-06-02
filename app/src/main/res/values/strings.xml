@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PrototypeVideoPlaylists</string>
+
+    <string name="playlist_activity_title">Saved video playlists</string>
 </resources>

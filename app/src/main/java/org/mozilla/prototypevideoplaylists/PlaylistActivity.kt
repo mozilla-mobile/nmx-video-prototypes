@@ -5,13 +5,12 @@
 package org.mozilla.prototypevideoplaylists
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_playlist.*
 
@@ -25,14 +24,23 @@ class PlaylistActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        toolbar.title = resources.getString(R.string.playlist_activity_title)
+        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"))
         setSupportActionBar(toolbar)
-        val appBar = supportActionBar!!
-        appBar.title = resources.getString(R.string.playlist_activity_title)
     }
 
     private fun initPlaylistView() {
         playlistView.adapter = PlaylistAdapter(this)
         playlistView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.playlist_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 }
 

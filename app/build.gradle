@@ -35,7 +35,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
-    compile 'com.beust:klaxon:0.30'
 
     compile "com.google.firebase:firebase-auth:${firebase_version}"
     compile "com.google.firebase:firebase-database:${firebase_version}"

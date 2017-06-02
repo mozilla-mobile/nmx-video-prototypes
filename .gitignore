@@ -1,3 +1,7 @@
+# Keys
+google-services.json
+
+# AS defaults
 *.iml
 .gradle
 /local.properties

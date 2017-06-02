@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.google.firebase.auth.FirebaseAuth
@@ -51,6 +52,7 @@ class PlaylistActivity : AppCompatActivity() {
     private fun initPlaylistView() {
         playlistView.adapter = adapter
         playlistView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        playlistView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

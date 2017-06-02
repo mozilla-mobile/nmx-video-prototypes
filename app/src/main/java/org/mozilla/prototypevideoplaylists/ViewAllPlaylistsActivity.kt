@@ -14,11 +14,11 @@ import android.view.*
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_playlist.*
 
-class PlaylistActivity : AppCompatActivity() {
+class ViewAllPlaylistsActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
 
-    private val adapter = PlaylistAdapter(getFirebaseUserID(this))
+    private val adapter = ViewAllPlaylistsAdapter(getFirebaseUserID(this))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

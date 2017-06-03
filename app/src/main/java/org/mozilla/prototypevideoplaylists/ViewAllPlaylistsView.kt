@@ -12,15 +12,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 
 class ViewAllPlaylistsViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
     val titleView = rootView.findViewById(R.id.playlistTitleView) as TextView
 }
 
-class ViewAllPlaylistsAdapter(firebaseUserID: String) : RecyclerView.Adapter<ViewAllPlaylistsViewHolder>() {
+class ViewAllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
+                              private val onPlaylistSelected: (Playlist) -> Unit) : RecyclerView.Adapter<ViewAllPlaylistsViewHolder>() {
 
-    private val fbRef = getFirebaseRefForUserID(firebaseUserID)
     private val valueListener = PlaylistValueEventListener(this)
 
     private var playlists = listOf<Playlist>()
@@ -29,6 +30,7 @@ class ViewAllPlaylistsAdapter(firebaseUserID: String) : RecyclerView.Adapter<Vie
     override fun onBindViewHolder(holder: ViewAllPlaylistsViewHolder?, position: Int) {
         if (holder == null) return
         val item = playlists[position]
+        holder.rootView.setTag(item)
         holder.titleView.text = item.name
     }
 
@@ -38,11 +40,12 @@ class ViewAllPlaylistsAdapter(firebaseUserID: String) : RecyclerView.Adapter<Vie
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewAllPlaylistsViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.playlist_item, parent, false)
+        view.setOnClickListener { view -> onPlaylistSelected(view.tag as Playlist) }
         return ViewAllPlaylistsViewHolder(view)
     }
 
-    fun onPause() { fbRef.removeEventListener(valueListener) }
-    fun onResume() { fbRef.addValueEventListener(valueListener) }
+    fun onPause() { firebaseRef.removeEventListener(valueListener) }
+    fun onResume() { firebaseRef.addValueEventListener(valueListener) }
 
     private class PlaylistValueEventListener(val adapter: ViewAllPlaylistsAdapter) : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot?) {

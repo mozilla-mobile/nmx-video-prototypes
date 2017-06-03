@@ -12,17 +12,19 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_playlist.*
+import kotlinx.android.synthetic.main.activity_view_all_playlists.*
 
 class ViewAllPlaylistsActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
 
-    private val adapter = ViewAllPlaylistsAdapter(getFirebaseUserID(this))
+    private val adapter = ViewAllPlaylistsAdapter(getFirebaseRefForUserID(getFirebaseUserID(this)), onPlaylistSelected = { playlist ->
+        startViewSinglePlaylistActivity(playlist.id)
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_playlist)
+        setContentView(R.layout.activity_view_all_playlists)
         initToolbar()
         initPlaylistView()
         firebaseAuth = FirebaseAuth.getInstance()
@@ -65,9 +67,9 @@ class ViewAllPlaylistsActivity : AppCompatActivity() {
 
     private fun onAddPlaylistActivityResult(data: Intent) {
         val playlistTitle = data.getStringExtra(AddPlaylistActivity.EXTRA_PLAYLIST_TITLE) ?: ""
-        val playlist = Playlist(playlistTitle, emptyList())
 
         val newPlaylistRef = getFirebaseRefForUserID(getFirebaseUserID(this)).push()
+        val playlist = Playlist(playlistTitle, id = newPlaylistRef.key, items = emptyList())
         newPlaylistRef.setValue(playlist)
     }
 
@@ -88,5 +90,11 @@ class ViewAllPlaylistsActivity : AppCompatActivity() {
     private fun onAddPlaylistClicked() {
         val addPlaylistIntent = Intent(this, AddPlaylistActivity::class.java)
         startActivityForResult(addPlaylistIntent, 100)
+    }
+
+    private fun startViewSinglePlaylistActivity(playlistID: String) {
+        val intent = Intent(this, ViewSinglePlaylistActivity::class.java)
+        intent.putExtra(ViewSinglePlaylistActivity.EXTRA_PLAYLIST_ID, playlistID)
+        startActivity(intent)
     }
 }

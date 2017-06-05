@@ -1,6 +1,8 @@
 package org.mozilla.prototypevideoplaylists
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -27,18 +29,6 @@ class ViewSinglePlaylistActivity : AppCompatActivity() {
         initPlaylistView()
     }
 
-    private fun initFromIntent() {
-        val playlistID = intent?.getStringExtra(EXTRA_PLAYLIST_ID)
-        if (playlistID == null) {
-            Log.w(TAG, "ViewSinglePlaylistActivity: expected playlist ID. finishing...")
-            finish()
-            return
-        }
-
-        val playlistFirebaseRef = getFirebaseRefForUserID(getFirebaseUserID(this)).child(playlistID)
-        adapter = ViewSinglePlaylistAdapter(playlistFirebaseRef, onTitleUpdate = { toolbar.title = it }) // todo: holds context?
-    }
-
     override fun onResume() {
         super.onResume()
         adapter.onResume()
@@ -49,7 +39,24 @@ class ViewSinglePlaylistActivity : AppCompatActivity() {
         adapter.onPause()
     }
 
-    private fun initToolbar() {
+    private fun initFromIntent() {
+        val playlistID = intent?.getStringExtra(EXTRA_PLAYLIST_ID)
+        if (playlistID == null) {
+            Log.w(TAG, "ViewSinglePlaylistActivity: expected playlist ID. finishing...")
+            finish()
+            return
+        }
+
+        val playlistFirebaseRef = getFirebaseRefForUserID(getFirebaseUserID(this)).child(playlistID)
+        adapter = ViewSinglePlaylistAdapter(playlistFirebaseRef, onTitleUpdate = {
+            toolbar.title = it
+        }, onVideoSelected = { url ->
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)) // todo: ensure http present?
+            startActivity(browserIntent) // todo: helper fn.
+        }) // todo: holds context?
+    }
+
+    private fun initToolbar() { // todo: add up button.
         toolbar.title = "" // override default application title.
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"))
         setSupportActionBar(toolbar)

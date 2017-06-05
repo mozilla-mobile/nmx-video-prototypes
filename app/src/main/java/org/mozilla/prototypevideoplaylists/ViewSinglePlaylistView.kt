@@ -15,12 +15,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 
-class ViewSinglePlaylistViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+class ViewSinglePlaylistViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
     val videoTitleView = rootView.findViewById(R.id.videoTitleView) as TextView
 }
 
 // Note: it's kind of weird we do title updates here - we might want to move it to the activity.
-class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference, private val onTitleUpdate: ((title: String) -> Unit)):
+class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference,
+                                private val onTitleUpdate: (title: String) -> Unit,
+                                private val onVideoSelected: (url: String) -> Unit):
         RecyclerView.Adapter<ViewSinglePlaylistViewHolder>() {
 
     private val valueListener = ViewSinglePlaylistValueEventListener(this)
@@ -30,13 +32,16 @@ class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference, priv
 
     override fun onBindViewHolder(holder: ViewSinglePlaylistViewHolder?, position: Int) {
         if (holder == null) return
-        holder.videoTitleView.text = playlist.items[position] // todo: give videos an object with a title, url.
+        val item = playlist.items[position]
+        holder.rootView.tag = item
+        holder.videoTitleView.text = item // todo: give videos an object with a title, url.
     }
 
     override fun getItemCount(): Int = playlist.items.size
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewSinglePlaylistViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.video_item, parent, false)
+        view.setOnClickListener { onVideoSelected(view.tag as String) }
         return ViewSinglePlaylistViewHolder(view)
     }
 

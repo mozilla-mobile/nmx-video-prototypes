@@ -20,27 +20,25 @@ class ViewAllPlaylistsViewHolder(val rootView: View) : RecyclerView.ViewHolder(r
 }
 
 class ViewAllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
-                              private val onPlaylistSelected: (Playlist) -> Unit) : RecyclerView.Adapter<ViewAllPlaylistsViewHolder>() {
+                              private val onPlaylistSelected: (String, Playlist) -> Unit) : RecyclerView.Adapter<ViewAllPlaylistsViewHolder>() {
 
     private val valueListener = PlaylistValueEventListener(this)
 
-    private var playlists = listOf<Playlist>()
+    private var playlists = listOf<PlaylistAndID>()
         set(value) { field = value; notifyDataSetChanged() }
 
     override fun onBindViewHolder(holder: ViewAllPlaylistsViewHolder?, position: Int) {
         if (holder == null) return
-        val item = playlists[position]
-        holder.rootView.setTag(item)
-        holder.titleView.text = item.name
+        val playlistAndID = playlists[position]
+        holder.rootView.setTag(playlistAndID)
+        holder.titleView.text = playlistAndID.playlist.name
     }
 
-    override fun getItemCount(): Int {
-        return playlists.size
-    }
+    override fun getItemCount(): Int = playlists.size
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewAllPlaylistsViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.playlist_item, parent, false)
-        view.setOnClickListener { view -> onPlaylistSelected(view.tag as Playlist) }
+        view.setOnClickListener { view -> with(view.tag as PlaylistAndID) { onPlaylistSelected(id, playlist) } }
         return ViewAllPlaylistsViewHolder(view)
     }
 
@@ -49,7 +47,7 @@ class ViewAllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
 
     private class PlaylistValueEventListener(val adapter: ViewAllPlaylistsAdapter) : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot?) {
-            adapter.playlists = snapshot?.children?.map { it.getValue(Playlist::class.java) } ?: emptyList() // todo: will break if ever null.
+            adapter.playlists = snapshot?.children?.map { PlaylistAndID(it.key, it.getValue(Playlist::class.java)) } ?: emptyList() // todo: will break if ever null.
         }
 
         override fun onCancelled(error: DatabaseError?) {
@@ -57,3 +55,5 @@ class ViewAllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
         }
     }
 }
+
+private data class PlaylistAndID(val id: String, val playlist: Playlist)

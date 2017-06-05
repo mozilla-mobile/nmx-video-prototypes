@@ -18,9 +18,9 @@ class ViewAllPlaylistsActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
 
-    private val adapter = ViewAllPlaylistsAdapter(getFirebaseRefForUserID(getFirebaseUserID(this)), onPlaylistSelected = { playlist ->
-        startViewSinglePlaylistActivity(playlist.id)
-    })
+    private val adapter = ViewAllPlaylistsAdapter(getFirebaseRefForUserID(getFirebaseUserID(this)), onPlaylistSelected = { id, playlist ->
+        startViewSinglePlaylistActivity(id)
+    }) // todo: reference to context okay?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +68,9 @@ class ViewAllPlaylistsActivity : AppCompatActivity() {
     private fun onAddPlaylistActivityResult(data: Intent) {
         val playlistTitle = data.getStringExtra(AddPlaylistActivity.EXTRA_PLAYLIST_TITLE) ?: ""
 
+        // todo: maybe we should use playlist title in some way for ID.
         val newPlaylistRef = getFirebaseRefForUserID(getFirebaseUserID(this)).push()
-        val playlist = Playlist(playlistTitle, id = newPlaylistRef.key, items = emptyList())
+        val playlist = Playlist(playlistTitle, items = emptyList())
         newPlaylistRef.setValue(playlist)
     }
 

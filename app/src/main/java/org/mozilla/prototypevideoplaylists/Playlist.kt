@@ -6,5 +6,4 @@ package org.mozilla.prototypevideoplaylists
 
 // We give mutable & default values to be compatible with Firebase's setValue call.
 data class Playlist(var name: String = "",
-                    var id: String = "",
                     var items: List<String> = emptyList())

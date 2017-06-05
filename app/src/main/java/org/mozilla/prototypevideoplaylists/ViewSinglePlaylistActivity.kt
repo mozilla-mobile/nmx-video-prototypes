@@ -21,6 +21,7 @@ class ViewSinglePlaylistActivity : AppCompatActivity() {
 
     private lateinit var adapter: ViewSinglePlaylistAdapter
 
+    // todo: add firebase auth.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_single_playlist)

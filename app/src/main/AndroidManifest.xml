@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".ViewSinglePlaylistActivity">
         </activity>
+        <activity android:name=".AbstractAllPlaylistsActivity">
+        </activity>
     </application>
 
 </manifest>

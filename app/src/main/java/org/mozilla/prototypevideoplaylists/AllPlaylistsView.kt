@@ -15,19 +15,19 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 
-class ViewAllPlaylistsViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
+class AllPlaylistsViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
     val titleView = rootView.findViewById(R.id.playlistTitleView) as TextView
 }
 
-class ViewAllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
-                              private val onPlaylistSelected: (String, Playlist) -> Unit) : RecyclerView.Adapter<ViewAllPlaylistsViewHolder>() {
+class AllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
+                          private val onPlaylistSelected: (String, Playlist) -> Unit) : RecyclerView.Adapter<AllPlaylistsViewHolder>() {
 
     private val valueListener = PlaylistValueEventListener(this)
 
     private var playlists = listOf<PlaylistAndID>()
         set(value) { field = value; notifyDataSetChanged() }
 
-    override fun onBindViewHolder(holder: ViewAllPlaylistsViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: AllPlaylistsViewHolder?, position: Int) {
         if (holder == null) return
         val playlistAndID = playlists[position]
         holder.rootView.setTag(playlistAndID)
@@ -36,17 +36,18 @@ class ViewAllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
 
     override fun getItemCount(): Int = playlists.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewAllPlaylistsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AllPlaylistsViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.playlist_item, parent, false)
         view.setOnClickListener { view -> with(view.tag as PlaylistAndID) { onPlaylistSelected(id, playlist) } }
-        return ViewAllPlaylistsViewHolder(view)
+        return AllPlaylistsViewHolder(view)
     }
 
     fun onPause() { firebaseRef.removeEventListener(valueListener) }
     fun onResume() { firebaseRef.addValueEventListener(valueListener) }
 
-    private class PlaylistValueEventListener(val adapter: ViewAllPlaylistsAdapter) : ValueEventListener {
+    private class PlaylistValueEventListener(val adapter: AllPlaylistsAdapter) : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot?) {
+            // Called from main thread, no need to lock.
             adapter.playlists = snapshot?.children?.map { PlaylistAndID(it.key, it.getValue(Playlist::class.java)) } ?: emptyList() // todo: will break if ever null.
         }
 

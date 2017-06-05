@@ -8,6 +8,8 @@ import android.content.Context
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
+val FIREBASE_KEY_PLAYLIST_ITEMS = "items"
+
 private val FIREBASE_USERS_TREE = "users"
 
 private val SHARED_PREFS_NAME = "Firebase"

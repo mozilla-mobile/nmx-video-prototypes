@@ -5,6 +5,10 @@
     <string name="playlist_activity_title">Saved video playlists</string>
     <string name="add_playlist">Add playlist</string>
 
+    <!-- SelectFromAllPlaylistsActivity -->
+    <string name="select_from_all_share_label">Add to playlist</string>
+    <string name="select_from_all_activity_title">Select a playlist to add to</string>
+
     <!-- AddPlaylistActivity -->
     <string name="add_playlist_activity_title">Create new playlist</string>
     <string name="playlist_title_hint">Playlist name</string>

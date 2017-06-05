@@ -9,19 +9,27 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+
         <activity android:name=".ViewAllPlaylistsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".AddPlaylistActivity">
+
+        <activity
+                android:name=".SelectFromAllPlaylistsActivity"
+                android:exported="true">
+            <intent-filter android:label="@string/select_from_all_share_label">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
-        <activity android:name=".ViewSinglePlaylistActivity">
-        </activity>
-        <activity android:name=".AbstractAllPlaylistsActivity">
-        </activity>
+
+        <activity android:name=".AddPlaylistActivity"/>
+        <activity android:name=".ViewSinglePlaylistActivity"/>
     </application>
 
 </manifest>

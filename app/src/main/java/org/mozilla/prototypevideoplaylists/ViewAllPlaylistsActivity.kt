@@ -6,6 +6,7 @@ package org.mozilla.prototypevideoplaylists
 
 import android.content.Intent
 
+/** Activity to display all playlists and, when clicked into, their details. */
 class ViewAllPlaylistsActivity : AbstractAllPlaylistsActivity(R.string.playlist_activity_title) {
 
     override fun onPlaylistSelected(id: String, playlist: Playlist) { startViewSinglePlaylistActivity(id) }

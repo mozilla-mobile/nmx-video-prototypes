@@ -22,7 +22,7 @@ class ViewSinglePlaylistViewHolder(val rootView: View) : RecyclerView.ViewHolder
 // Note: it's kind of weird we do title updates here - we might want to move it to the activity.
 class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference,
                                 private val onTitleUpdate: (title: String) -> Unit,
-                                private val onVideoSelected: (url: String) -> Unit):
+                                private val onVideoSelected: (title: String, url: String) -> Unit):
         RecyclerView.Adapter<ViewSinglePlaylistViewHolder>() {
 
     private val valueListener = ViewSinglePlaylistValueEventListener(this)
@@ -34,14 +34,14 @@ class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference,
         if (holder == null) return
         val item = playlist.items[position]
         holder.rootView.tag = item
-        holder.videoTitleView.text = item // todo: give videos an object with a title, url.
+        holder.videoTitleView.text = item.title
     }
 
     override fun getItemCount(): Int = playlist.items.size
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewSinglePlaylistViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.video_item, parent, false)
-        view.setOnClickListener { onVideoSelected(view.tag as String) }
+        view.setOnClickListener { with(view.tag as PlaylistItem) { onVideoSelected(title, uri) } }
         return ViewSinglePlaylistViewHolder(view)
     }
 

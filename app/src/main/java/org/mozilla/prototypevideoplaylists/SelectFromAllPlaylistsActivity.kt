@@ -25,16 +25,17 @@ class SelectFromAllPlaylistsActivity : AbstractAllPlaylistsActivity(R.string.sel
             return
         }
 
-        addVideoToPlaylist(videoURI, id, playlist)
+        addVideoToPlaylist(pageTitle, videoURI, id, playlist)
         finish() // todo: confirmation animation.
     }
 
-    private fun addVideoToPlaylist(videoURI: String, id: String, playlist: Playlist) {
+    private fun addVideoToPlaylist(videoTitle: String, videoURI: String, id: String, playlist: Playlist) {
         val usersFirebase = getFirebaseRefForUserID(getFirebaseUserID(this))
         val selectedPlaylist = usersFirebase.child(id)
 
         // Less efficient than adding a single element, but it was easier for me to write quickly.
-        val newPlaylist = playlist.withAppendedItem(videoURI)
+        val newPlaylistItem = PlaylistItem(videoTitle, videoURI)
+        val newPlaylist = playlist.withAppendedItem(newPlaylistItem)
         selectedPlaylist.setValue(newPlaylist) // todo: I assume it's fine if this runs in bg?
     }
 }

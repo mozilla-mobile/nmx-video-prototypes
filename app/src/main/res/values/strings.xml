@@ -6,5 +6,6 @@
     <string name="add_playlist">Add playlist</string>
 
     <!-- AddPlaylistActivity -->
+    <string name="add_playlist_activity_title">Create new playlist</string>
     <string name="playlist_title_hint">Playlist name</string>
 </resources>

@@ -12,6 +12,15 @@
         android:orientation="vertical"
         tools:context="org.mozilla.prototypevideoplaylists.AddPlaylistActivity"
 >
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    />
 
     <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

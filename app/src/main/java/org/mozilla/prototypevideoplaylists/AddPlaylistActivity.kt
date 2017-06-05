@@ -6,6 +6,7 @@ package org.mozilla.prototypevideoplaylists
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_playlist.*
@@ -23,7 +24,14 @@ class AddPlaylistActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_playlist)
+        initToolbar()
         initButtons()
+    }
+
+    private fun initToolbar() { // todo: back button.
+        toolbar.setTitle(R.string.add_playlist_activity_title)
+        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"))
+        setSupportActionBar(toolbar)
     }
 
     private fun initButtons() {

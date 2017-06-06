@@ -20,7 +20,7 @@ class ViewAllPlaylistsActivity : AbstractAllPlaylistsActivity(R.string.playlist_
         intent.putExtra(Intent.EXTRA_SUBJECT, "Check out my video playlist, ${playlist.name}!")
         intent.putExtra(Intent.EXTRA_TEXT, getFirebaseURIForPlaylist(userID = getFirebaseUserID(this), playlistID = id))
         intent.type = "text/plain"
-        return intent
+        return Intent.createChooser(intent, resources.getString(R.string.share_playlist_chooser_title))
     }
 
     private fun startViewSinglePlaylistActivity(playlistID: String) {

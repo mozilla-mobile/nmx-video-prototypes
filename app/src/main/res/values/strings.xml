@@ -4,6 +4,7 @@
     <!-- ViewAllPlaylistsActivity -->
     <string name="playlist_activity_title">Saved video playlists</string>
     <string name="add_playlist">Add playlist</string>
+    <string name="share_playlist_chooser_title">Share Playlist</string>
 
     <!-- SelectFromAllPlaylistsActivity -->
     <string name="select_from_all_share_label">Add to playlist</string>

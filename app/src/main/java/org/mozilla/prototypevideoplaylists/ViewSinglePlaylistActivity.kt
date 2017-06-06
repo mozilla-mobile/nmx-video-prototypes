@@ -65,7 +65,7 @@ class ViewSinglePlaylistActivity : AppCompatActivity() {
         }
 
         val playlistFirebaseRef = getFirebaseRefForUserID(playlist.userID).child(playlist.playlistID)
-        adapter = ViewSinglePlaylistAdapter(playlistFirebaseRef, onTitleUpdate = {
+        adapter = ViewSinglePlaylistAdapter(playlistFirebaseRef, shouldShowDelete = intent.action == ACTION_VIEW_LOCAL_PLAYLIST, onTitleUpdate = {
             toolbar.title = "Playlist: ${it}" // todo: l10n
         }, onVideoSelected = { title, url ->
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)) // todo: ensure http present?

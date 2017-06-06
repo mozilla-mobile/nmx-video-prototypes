@@ -24,6 +24,7 @@ class ViewSinglePlaylistViewHolder(val rootView: View) : RecyclerView.ViewHolder
 
 // Note: it's kind of weird we do title updates here - we might want to move it to the activity.
 class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference,
+                                private val shouldShowDelete: Boolean,
                                 private val onTitleUpdate: (title: String) -> Unit,
                                 private val onVideoSelected: (title: String, url: String) -> Unit):
         RecyclerView.Adapter<ViewSinglePlaylistViewHolder>() {
@@ -39,6 +40,8 @@ class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference,
         holder.rootView.tag = PlaylistItemAndIndex(position, item)
         holder.videoTitleView.text = item.title
         holder.videoURLView.text = item.uri
+
+        holder.videoDeleteView.visibility = if (shouldShowDelete) View.VISIBLE else View.GONE
     }
 
     override fun getItemCount(): Int = playlist.items.size

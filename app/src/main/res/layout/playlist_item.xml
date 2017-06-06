@@ -13,14 +13,33 @@
               android:layout_marginBottom="12dp"
 >
 
-    <TextView
-            android:id="@+id/playlistTitleView"
-            android:layout_width="match_parent"
+    <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:orientation="vertical"
             android:layout_gravity="center_vertical"
-            android:textSize="24sp"
-            tools:text="Funny videos"/>
+    >
+
+        <TextView
+                android:id="@+id/playlistTitleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                tools:text="Funny videos"/>
+
+        <TextView
+                android:id="@+id/playlistItemsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:maxLines="3"
+                tools:text="A sample video...\nAnd Another..."/>
+
+    </LinearLayout>
 
     <ImageView
             android:id="@+id/playlistShareView"

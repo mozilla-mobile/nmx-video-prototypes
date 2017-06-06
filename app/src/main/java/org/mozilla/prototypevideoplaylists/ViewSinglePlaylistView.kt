@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener
 
 class ViewSinglePlaylistViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
     val videoTitleView = rootView.findViewById(R.id.videoTitleView) as TextView
+    val videoURLView = rootView.findViewById(R.id.videoURLView) as TextView
 }
 
 // Note: it's kind of weird we do title updates here - we might want to move it to the activity.
@@ -35,6 +36,7 @@ class ViewSinglePlaylistAdapter(private val firebaseRef: DatabaseReference,
         val item = playlist.items[position]
         holder.rootView.tag = item
         holder.videoTitleView.text = item.title
+        holder.videoURLView.text = item.uri
     }
 
     override fun getItemCount(): Int = playlist.items.size

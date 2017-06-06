@@ -5,6 +5,7 @@
 package org.mozilla.prototypevideoplaylists
 
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.google.firebase.database.ValueEventListener
 
 class AllPlaylistsViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
     val titleView = rootView.findViewById(R.id.playlistTitleView) as TextView
+    val itemsView = rootView.findViewById(R.id.playlistItemsView) as TextView
     val shareView = rootView.findViewById(R.id.playlistShareView) as ImageView
 
     fun setViewTags(tag: Any) {
@@ -40,7 +42,15 @@ class AllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
         if (holder == null) return
         val playlistAndID = playlists[position]
         holder.setViewTags(playlistAndID)
-        holder.titleView.text = playlistAndID.playlist.name
+        val playlist = playlistAndID.playlist
+        holder.titleView.text = "${playlist.name} (${playlist.items.size} videos)" // todo: l10n
+        // HACK: these should be separate textViews or SpannableStrings? so that the text doesn't wrap itself.
+        holder.itemsView.text = playlist.items.take(3).fold("") { acc, item ->
+            val title = item.title
+            "${acc}\n${title.substring(0, Math.min(32, title.lastIndex))}..."
+        }.drop(1) // rm first newline.
+
+        holder.itemsView.visibility = if (TextUtils.isEmpty(holder.itemsView.text)) View.GONE else View.VISIBLE
     }
 
     override fun getItemCount(): Int = playlists.size

@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,10 +18,18 @@ import com.google.firebase.database.ValueEventListener
 
 class AllPlaylistsViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView) {
     val titleView = rootView.findViewById(R.id.playlistTitleView) as TextView
+    val shareView = rootView.findViewById(R.id.playlistShareView) as ImageView
+
+    fun setViewTags(tag: Any) {
+        rootView.setTag(tag)
+        titleView.setTag(tag)
+        shareView.setTag(tag)
+    }
 }
 
 class AllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
-                          private val onPlaylistSelected: (String, Playlist) -> Unit) : RecyclerView.Adapter<AllPlaylistsViewHolder>() {
+                          private val onPlaylistSelected: (String, Playlist) -> Unit,
+                          private val onShareSelected: (id: String, Playlist) -> Unit) : RecyclerView.Adapter<AllPlaylistsViewHolder>() {
 
     private val valueListener = PlaylistValueEventListener(this)
 
@@ -30,7 +39,7 @@ class AllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
     override fun onBindViewHolder(holder: AllPlaylistsViewHolder?, position: Int) {
         if (holder == null) return
         val playlistAndID = playlists[position]
-        holder.rootView.setTag(playlistAndID)
+        holder.setViewTags(playlistAndID)
         holder.titleView.text = playlistAndID.playlist.name
     }
 
@@ -38,8 +47,10 @@ class AllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AllPlaylistsViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.playlist_item, parent, false)
-        view.setOnClickListener { view -> with(view.tag as PlaylistAndID) { onPlaylistSelected(id, playlist) } }
-        return AllPlaylistsViewHolder(view)
+        val holder = AllPlaylistsViewHolder(view)
+        holder.rootView.setOnClickListener { view -> with (view.tag as PlaylistAndID) { onPlaylistSelected(id, playlist) } }
+        holder.shareView.setOnClickListener { view -> with (view.tag as PlaylistAndID) { onShareSelected(id, playlist) } }
+        return holder
     }
 
     fun onPause() { firebaseRef.removeEventListener(valueListener) }

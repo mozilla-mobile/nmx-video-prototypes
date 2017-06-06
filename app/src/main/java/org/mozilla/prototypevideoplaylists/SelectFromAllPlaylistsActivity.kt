@@ -7,9 +7,14 @@ package org.mozilla.prototypevideoplaylists
 import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Toast
 
 /** Activity to select one playlist from a list of all of them. */
 class SelectFromAllPlaylistsActivity : AbstractAllPlaylistsActivity(R.string.select_from_all_activity_title) {
+
+    override fun onShareSelected(id: String, playlist: Playlist) {
+        Toast.makeText(this, "Share is disabled when adding playlists", Toast.LENGTH_SHORT).show()
+    }
 
     override fun onPlaylistSelected(id: String, playlist: Playlist) {
         // todo: notify user of errors. maybe in onCreate.

@@ -24,12 +24,14 @@ import kotlinx.android.synthetic.main.activity_all_playlists.*
  */
 abstract class AbstractAllPlaylistsActivity(@StringRes private val toolbarTitleResource: Int) : AppCompatActivity() {
 
+    abstract fun onShareSelected(id: String, playlist: Playlist)
     abstract fun onPlaylistSelected(id: String, playlist: Playlist)
 
     private lateinit var firebaseAuth: FirebaseAuth
 
     private val adapter = AllPlaylistsAdapter(getFirebaseRefForUserID(getFirebaseUserID(this)),
-            onPlaylistSelected = this::onPlaylistSelected)
+            onPlaylistSelected = this::onPlaylistSelected,
+            onShareSelected = this::onShareSelected)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

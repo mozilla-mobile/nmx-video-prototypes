@@ -27,23 +27,18 @@ abstract class AbstractAllPlaylistsActivity(@StringRes private val toolbarTitleR
     abstract fun onShareSelected(id: String, playlist: Playlist)
     abstract fun onPlaylistSelected(id: String, playlist: Playlist)
 
-    private lateinit var firebaseAuth: FirebaseAuth
-
-    private val adapter = AllPlaylistsAdapter(getFirebaseRefForUserID(getFirebaseUserID(this)),
-            onPlaylistSelected = this::onPlaylistSelected,
-            onShareSelected = this::onShareSelected)
+    private lateinit var adapter: AllPlaylistsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_playlists)
         initToolbar()
         initPlaylistView()
-        firebaseAuth = FirebaseAuth.getInstance()
     }
 
     override fun onStart() {
         super.onStart()
-        firebaseAuth.signInAnonymously() // todo: we should verify completion or figure out if it blocks.
+        onStartSignIntoFirebase()
     }
 
     override fun onResume() {
@@ -63,6 +58,9 @@ abstract class AbstractAllPlaylistsActivity(@StringRes private val toolbarTitleR
     }
 
     private fun initPlaylistView() {
+        adapter = AllPlaylistsAdapter(getFirebaseRefForUserID(getFirebaseUserID(this)),
+                onPlaylistSelected = this::onPlaylistSelected,
+                onShareSelected = this::onShareSelected)
         playlistView.adapter = adapter
         playlistView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         playlistView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))

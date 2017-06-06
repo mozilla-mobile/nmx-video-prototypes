@@ -6,9 +6,9 @@ package org.mozilla.prototypevideoplaylists
 
 import android.content.Context
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
-import java.util.regex.Pattern
 
 val FIREBASE_KEY_PLAYLIST_ITEMS = "items"
 
@@ -17,10 +17,9 @@ private val FIREBASE_USERS_TREE = "users"
 private val SHARED_PREFS_NAME = "Firebase"
 private val KEY_FIREBASE_ID = "firebase-id"
 
-private val firebaseRef = FirebaseDatabase.getInstance().reference
+private val firebaseRef by lazy { FirebaseDatabase.getInstance().reference }
 
 fun getFirebaseUserID(context: Context): String {
-    return "test-user" // todo: replace.
     val sharedPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, 0)
     return sharedPrefs.getString(KEY_FIREBASE_ID, null) ?: {
         val newID = UUID.randomUUID().toString()
@@ -43,3 +42,9 @@ fun getPlaylistFromFirebaseURI(uri: String): UserPlaylist? {
 }
 
 data class UserPlaylist(val userID: String, val playlistID: String)
+
+private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
+/** Signs into firebase; should be called from onStart. */
+fun onStartSignIntoFirebase() {
+    firebaseAuth.signInAnonymously() // todo: block until done or verify blocks other calls until done?
+}

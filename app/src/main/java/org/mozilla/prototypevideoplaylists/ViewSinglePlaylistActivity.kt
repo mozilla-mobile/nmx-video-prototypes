@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_view_single_playlist.*
 
 class ViewSinglePlaylistActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class ViewSinglePlaylistActivity : AppCompatActivity() {
         private val INTENT_PREFIX = "org.mozilla.prototypevideoplaylists.ViewSinglePlaylistActivity"
 
         // Arguments.
+        val ACTION_VIEW_LOCAL_PLAYLIST = "${INTENT_PREFIX}.action.viewLocalPlaylist"
         val EXTRA_PLAYLIST_ID = "${INTENT_PREFIX}.extra.playlistID"
     }
 
@@ -45,20 +47,41 @@ class ViewSinglePlaylistActivity : AppCompatActivity() {
     }
 
     private fun initFromIntent() {
-        val playlistID = intent?.getStringExtra(EXTRA_PLAYLIST_ID)
-        if (playlistID == null) {
-            Log.w(TAG, "ViewSinglePlaylistActivity: expected playlist ID. finishing...")
-            finish()
+        val intent = intent
+        if (intent == null) { Log.w(TAG, "Intent unexpectedly null."); finish(); return }
+
+        val playlist = when (intent.action) {
+            ACTION_VIEW_LOCAL_PLAYLIST -> getPlaylistFromLocalPlaylistIntent(intent)
+            else -> getPlaylistFromSharedPlaylistIntent(intent)
+        }
+
+        if (playlist == null) {
+            Toast.makeText(this, "Error! Unable to get the desired playlist.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val playlistFirebaseRef = getFirebaseRefForUserID(getFirebaseUserID(this)).child(playlistID)
+        val playlistFirebaseRef = getFirebaseRefForUserID(playlist.userID).child(playlist.playlistID)
         adapter = ViewSinglePlaylistAdapter(playlistFirebaseRef, onTitleUpdate = {
             toolbar.title = it
         }, onVideoSelected = { title, url ->
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)) // todo: ensure http present?
             startActivity(browserIntent) // todo: helper fn.
         }) // todo: holds context?
+    }
+
+    private fun getPlaylistFromSharedPlaylistIntent(intent: Intent): UserPlaylist? {
+        val playlist = getPlaylistFromFirebaseURI(intent.dataString ?: "")
+        if (playlist == null) { Log.w(TAG, "Unable to create playlist from uri: ${intent.dataString ?: "null"}") }
+        return playlist
+    }
+
+    private fun getPlaylistFromLocalPlaylistIntent(intent: Intent): UserPlaylist? {
+        val playlistID = intent.getStringExtra(EXTRA_PLAYLIST_ID)
+        return if (playlistID != null) { UserPlaylist(userID = getFirebaseUserID(this), playlistID = playlistID) }
+        else {
+            Log.w(TAG, "ViewSinglePlaylistActivity: expected playlist ID.")
+            null
+        }
     }
 
     private fun initToolbar() { // todo: add up button.

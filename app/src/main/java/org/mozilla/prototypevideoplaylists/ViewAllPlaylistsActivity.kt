@@ -18,13 +18,14 @@ class ViewAllPlaylistsActivity : AbstractAllPlaylistsActivity(R.string.playlist_
     private fun getShareIntentForPlaylist(id: String, playlist: Playlist): Intent {
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_SUBJECT, "Check out my video playlist, ${playlist.name}!")
-        intent.putExtra(Intent.EXTRA_TEXT, "http://kotaku.com") // todo
+        intent.putExtra(Intent.EXTRA_TEXT, getFirebaseURIForPlaylist(userID = getFirebaseUserID(this), playlistID = id))
         intent.type = "text/plain"
         return intent
     }
 
     private fun startViewSinglePlaylistActivity(playlistID: String) {
         val intent = Intent(this, ViewSinglePlaylistActivity::class.java)
+        intent.action = ViewSinglePlaylistActivity.ACTION_VIEW_LOCAL_PLAYLIST
         intent.putExtra(ViewSinglePlaylistActivity.EXTRA_PLAYLIST_ID, playlistID)
         startActivity(intent)
     }

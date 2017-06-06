@@ -5,8 +5,10 @@
 package org.mozilla.prototypevideoplaylists
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
+import java.util.regex.Pattern
 
 val FIREBASE_KEY_PLAYLIST_ITEMS = "items"
 
@@ -28,3 +30,16 @@ fun getFirebaseUserID(context: Context): String {
 }
 
 fun getFirebaseRefForUserID(userID: String) = firebaseRef.child(FIREBASE_USERS_TREE).child(userID)
+
+private val WEBSITE_URI = "https://prototypevideoplaylists.firebaseapp.com"
+fun getFirebaseURIForPlaylist(userID: String, playlistID: String) = "${WEBSITE_URI}/${userID}/${playlistID}"
+fun getPlaylistFromFirebaseURI(uri: String): UserPlaylist? {
+    // A better impl would use regex.
+    val pathComponents = uri.split('/')
+    if (!uri.startsWith(WEBSITE_URI) || // verify our url.
+            pathComponents.size < 2) { Log.w(TAG, "Unexpected uri type: ${uri}"); return null }
+    val importantComponents = pathComponents.takeLast(2)
+    return UserPlaylist(importantComponents[0], importantComponents[1])
+}
+
+data class UserPlaylist(val userID: String, val playlistID: String)

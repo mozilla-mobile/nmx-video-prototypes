@@ -50,4 +50,14 @@
             android:src="@drawable/share"
     />
 
+    <ImageView
+            android:id="@+id/playlistDeleteView"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/delete"
+    />
+
 </LinearLayout>

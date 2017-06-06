@@ -21,11 +21,10 @@ class AllPlaylistsViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootV
     val titleView = rootView.findViewById(R.id.playlistTitleView) as TextView
     val itemsView = rootView.findViewById(R.id.playlistItemsView) as TextView
     val shareView = rootView.findViewById(R.id.playlistShareView) as ImageView
+    val deleteView = rootView.findViewById(R.id.playlistDeleteView) as ImageView
 
     fun setViewTags(tag: Any) {
-        rootView.setTag(tag)
-        titleView.setTag(tag)
-        shareView.setTag(tag)
+        listOf(rootView, titleView, shareView, deleteView).forEach { it.setTag(tag) }
     }
 }
 
@@ -60,6 +59,7 @@ class AllPlaylistsAdapter(private val firebaseRef: DatabaseReference,
         val holder = AllPlaylistsViewHolder(view)
         holder.rootView.setOnClickListener { view -> with (view.tag as PlaylistAndID) { onPlaylistSelected(id, playlist) } }
         holder.shareView.setOnClickListener { view -> with (view.tag as PlaylistAndID) { onShareSelected(id, playlist) } }
+        holder.deleteView.setOnClickListener { view -> with (view.tag as PlaylistAndID) { firebaseRef.child(id).removeValue() } }
         return holder
     }
 

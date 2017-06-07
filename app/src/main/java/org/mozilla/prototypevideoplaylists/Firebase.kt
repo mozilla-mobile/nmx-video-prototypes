@@ -17,7 +17,11 @@ private val FIREBASE_USERS_TREE = "users"
 private val SHARED_PREFS_NAME = "Firebase"
 private val KEY_FIREBASE_ID = "firebase-id"
 
-private val firebaseRef by lazy { FirebaseDatabase.getInstance().reference }
+private val firebaseRef by lazy {
+    val db = FirebaseDatabase.getInstance()
+    db.setPersistenceEnabled(true)
+    db.reference
+}
 
 fun getFirebaseUserID(context: Context): String {
     val sharedPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, 0)
